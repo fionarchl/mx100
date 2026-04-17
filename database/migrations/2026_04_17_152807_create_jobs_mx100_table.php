@@ -13,13 +13,16 @@ return new class extends Migration
     {
         Schema::create('jobs_mx100', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('employer_id')->constrained('users')->cascadeOnDelete();                
+            $table->foreignId('employer_id')->constrained('users')->cascadeOnDelete();
             $table->string('title');
-            $table->text('description')->nullable();                
-            $table->enum('status', ['draft','published'])->default('draft');                
-            $table->timestamps();                
-            $table->string('created_by')->default('SYSTEM');
-            $table->string('updated_by')->default('SYSTEM')->nullable();
+            $table->text('description')->nullable();
+            $table->enum('status', ['draft', 'published'])->default('draft');            
+            $table->timestamps();
+            $table->string('created_by')->nullable();
+            $table->string('updated_by')->nullable();
+            $table->index('employer_id'); 
+            $table->index('status');
+            $table->softDeletes(); 
         });
     }
 

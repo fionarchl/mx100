@@ -2,38 +2,31 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use App\Models\Role;
+use App\Models\User;
 
 class UserSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
+        
+        $employerRole = Role::where('name', 'employer')->first();
+        $freelancerRole = Role::where('name', 'freelancer')->first();
 
-        DB::table('users')->insert([
-            [
-                'id' => 1,
-                'name' => 'Employer One',
-                'email' => 'employer@mail.com',
-                'password' => Hash::make('password'),
-                'role_id' => 1,
-                'phone_number' => '0811111111',
-                'created_by' => 'SYSTEM'
-            ],
-            [
-                'id' => 2,
-                'name' => 'Freelancer One',
-                'email' => 'freelancer@mail.com',
-                'password' => Hash::make('password'),
-                'role_id' => 2,
-                'phone_number' => '0822222222',
-                'created_by' => 'SYSTEM'
-            ]
+        User::factory()->create([
+            'name' => 'Employer One',
+            'email' => 'employer@mail.com',
+            'role_id' => $employerRole->id
         ]);
+
+        User::factory()->create([
+            'name' => 'Freelancer One',
+            'email' => 'freelancer@mail.com',
+            'role_id' => $freelancerRole->id,
+        ]);
+
     }
 }

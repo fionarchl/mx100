@@ -2,27 +2,22 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use App\Models\Job;
+use App\Models\User;
+use App\Models\ApplicationStatus;
+use App\Models\Application;
 
 class ApplicationSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        DB::table('applications')->insert([
-            [
-                'job_id' => 1,
-                'freelancer_id' => 2,
-                'cv_path' => 'cv/freelancer1.pdf',
-                'email' => 'freelancer@mail.com',
-                'phone_number' => '0822222222',
-                'status_id' => 1, 
-                'created_by' => 'SYSTEM'
-            ]
-        ]);
+        Application::factory()->count(30)->make()->each(function ($app) {
+            Application::firstOrCreate([
+                'job_id' => $app->job_id,
+                'freelancer_id' => $app->freelancer_id,
+            ], $app->toArray());
+        });
     }
 }
