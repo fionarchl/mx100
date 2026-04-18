@@ -1,0 +1,1607 @@
+{
+  "info": {
+    "_postman_id": "9caaf60d-9ffe-47b0-933c-469bc62f077e",
+    "name": "MX100 API",
+    "description": "MX100 API adalah RESTful API untuk platform job portal yang menghubungkan Employer dan Freelancer.\n\nFitur utama:\n\n- Employer dapat membuat, mengelola, dan mempublish job\n    \n- Freelancer dapat melihat job yang tersedia dan mengajukan lamaran\n    \n- Employer dapat melihat dan mengelola lamaran dari freelancer\n    \n\nAPI ini menggunakan autentikasi berbasis Bearer Token (Laravel Sanctum) dan menerapkan role-based access control:\n\n- Employer (role_id = 1)\n    \n- Freelancer (role_id = 2)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "54110293",
+    "_collection_link": "https://go.postman.co/collection/54110293-9caaf60d-9ffe-47b0-933c-469bc62f077e?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "/api/v1/register",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"name\": \"Employer Test 12\",\r\n    \"email\": \"employer@test12.com\",\r\n    \"password\": \"password\",\r\n    \"phone_number\": \"+6212312341234\",\r\n    \"role_id\": 1\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/register",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "register"
+          ]
+        },
+        "description": "Endpoint untuk mendaftarkan user baru ke sistem.\n\nRequest harus berisi:\n\n- name\n    \n- email\n    \n- password\n    \n- role_id (1 = Employer, 2 = Freelancer)\n    \n\nResponse akan mengembalikan data user dan token autentikasi yang dapat digunakan untuk mengakses endpoint lain."
+      },
+      "response": [
+        {
+          "name": "Example",
+          "originalRequest": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"Employer Test 12\",\r\n  \"email\": \"employer@test12.com\",\r\n  \"password\": \"password\",\r\n  \"phone_number\": \"+6212312341234\",\r\n  \"role_id\": 1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/v1/register",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "v1",
+                "register"
+              ]
+            }
+          },
+          "status": "Created",
+          "code": 201,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "Host",
+              "value": "127.0.0.1:8000"
+            },
+            {
+              "key": "Connection",
+              "value": "close"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "PHP/8.2.12"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, private"
+            },
+            {
+              "key": "Date",
+              "value": "Fri, 17 Apr 2026 22:12:35 GMT"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"message\": \"Register successful\",\n    \"data\": {\n        \"user\": {\n            \"name\": \"Employer Test 12\",\n            \"email\": \"employer@test12.com\",\n            \"role_id\": 1,\n            \"phone_number\": \"+6212312341234\",\n            \"created_by\": \"SYSTEM\",\n            \"updated_at\": \"2026-04-17T22:12:35.000000Z\",\n            \"created_at\": \"2026-04-17T22:12:35.000000Z\",\n            \"id\": 5\n        },\n        \"token\": \"4|oburCKx6C0xn5fVqvitZPs78yxPqQMWf3259oLcWc2334cb0\"\n    }\n}"
+        }
+      ]
+    },
+    {
+      "name": "/api/v1/login (Employer)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"employer@test12.com\",\n  \"password\": \"password\"\n}",
+          "options": {
+            "raw": {
+              "headerFamily": "json",
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/login",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "login"
+          ]
+        },
+        "description": "Endpoint untuk autentikasi user menggunakan email dan password.\n\nJika berhasil, sistem akan mengembalikan access token yang digunakan sebagai Bearer Token untuk mengakses endpoint yang membutuhkan autentikasi.\n\nContoh di bawah adalah payload untuk login ke akun Employer."
+      },
+      "response": [
+        {
+          "name": "Example",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"employer@test12.com\",\n  \"password\": \"password\"\n}",
+              "options": {
+                "raw": {
+                  "headerFamily": "json",
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "login"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "Host",
+              "value": "127.0.0.1:8000"
+            },
+            {
+              "key": "Connection",
+              "value": "close"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "PHP/8.2.12"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, private"
+            },
+            {
+              "key": "Date",
+              "value": "Fri, 17 Apr 2026 22:13:05 GMT"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"message\": \"Login successful\",\n    \"data\": {\n        \"user\": {\n            \"id\": 5,\n            \"name\": \"Employer Test 12\",\n            \"email\": \"employer@test12.com\",\n            \"phone_number\": \"+6212312341234\",\n            \"role_id\": 1,\n            \"profile_photo\": null,\n            \"profile_description\": null,\n            \"created_at\": \"2026-04-17T22:12:35.000000Z\",\n            \"updated_at\": \"2026-04-17T22:12:35.000000Z\",\n            \"created_by\": \"SYSTEM\",\n            \"updated_by\": null\n        },\n        \"token\": \"5|7FidZByyeibA56IAdDMF17AWCft8PVe441kb5FOw8741ac48\"\n    }\n}"
+        }
+      ]
+    },
+    {
+      "name": "/api/v1/login (Freelancer)",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"freelancer@mail.com\",\r\n  \"password\": \"password\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/login",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "login"
+          ]
+        },
+        "description": "Endpoint untuk autentikasi user menggunakan email dan password.\n\nJika berhasil, sistem akan mengembalikan access token yang digunakan sebagai Bearer Token untuk mengakses endpoint yang membutuhkan autentikasi.\n\nContoh di bawah adalah payload untuk login ke akun Freelancer."
+      },
+      "response": [
+        {
+          "name": "Example",
+          "originalRequest": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"freelancer@mail.com\",\r\n  \"password\": \"password\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "login"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "Host",
+              "value": "127.0.0.1:8000"
+            },
+            {
+              "key": "Connection",
+              "value": "close"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "PHP/8.2.12"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, private"
+            },
+            {
+              "key": "Date",
+              "value": "Fri, 17 Apr 2026 22:42:44 GMT"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"message\": \"Login successful\",\n    \"data\": {\n        \"user\": {\n            \"id\": 2,\n            \"name\": \"Freelancer One\",\n            \"email\": \"freelancer@mail.com\",\n            \"phone_number\": \"731.348.3132\",\n            \"role_id\": 2,\n            \"profile_photo\": null,\n            \"profile_description\": \"Hic et assumenda quis inventore dolores odio aliquid sint.\",\n            \"created_at\": \"2026-04-17T19:22:42.000000Z\",\n            \"updated_at\": \"2026-04-17T19:22:42.000000Z\",\n            \"created_by\": \"SYSTEM\",\n            \"updated_by\": \"SYSTEM\"\n        },\n        \"token\": \"6|kKU1GW9RTBMDp6kVofmMHjrtMCeOje4aaHemp2kDa872efbd\"\n    }\n}"
+        }
+      ]
+    },
+    {
+      "name": "/api/v1/jobs",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{Token}}"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"title\": \"Backend Developer\",\r\n    \"description\": \"Laravel job\",\r\n    \"status\": \"published\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/jobs",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "jobs"
+          ]
+        },
+        "description": "Endpoint untuk membuat job baru.\n\nHanya dapat diakses oleh user dengan role Employer (role_id = 1).\n\nField utama:\n\n- title\n    \n- description\n    \n- status (draft / published)\n    \n\nJob dapat disimpan sebagai draft atau langsung dipublish."
+      },
+      "response": [
+        {
+          "name": "Example",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{Token}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"title\": \"Backend Developer\",\r\n  \"description\": \"Laravel job\",\r\n  \"status\": \"published\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/jobs",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "jobs"
+              ]
+            }
+          },
+          "status": "Created",
+          "code": 201,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "Host",
+              "value": "127.0.0.1:8000"
+            },
+            {
+              "key": "Connection",
+              "value": "close"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "PHP/8.2.12"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, private"
+            },
+            {
+              "key": "Date",
+              "value": "Fri, 17 Apr 2026 22:46:43 GMT"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"message\": \"Job created successfully\",\n    \"data\": {\n        \"title\": \"Backend Developer\",\n        \"description\": \"Laravel job\",\n        \"status\": \"published\",\n        \"employer_id\": 3,\n        \"created_by\": 3,\n        \"updated_at\": \"2026-04-17T22:46:43.000000Z\",\n        \"created_at\": \"2026-04-17T22:46:43.000000Z\",\n        \"id\": 24\n    }\n}"
+        }
+      ]
+    },
+    {
+      "name": "/api/v1/jobs/my",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{Token}}"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": ""
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/jobs/my",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "jobs",
+            "my"
+          ]
+        },
+        "description": "Endpoint untuk mendapatkan daftar job milik user yang sedang login (Employer).\n\nMenampilkan semua job, baik yang masih draft maupun yang sudah dipublish."
+      },
+      "response": [
+        {
+          "name": "Example",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{Token}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/jobs/my",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "jobs",
+                "my"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "Host",
+              "value": "127.0.0.1:8000"
+            },
+            {
+              "key": "Connection",
+              "value": "close"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "PHP/8.2.12"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, private"
+            },
+            {
+              "key": "Date",
+              "value": "Sat, 18 Apr 2026 09:51:07 GMT"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"data\": [\n        {\n            \"id\": 21,\n            \"employer_id\": 3,\n            \"title\": \"Backend Developer\",\n            \"description\": \"Laravel job\",\n            \"status\": \"published\",\n            \"created_at\": \"2026-04-17T22:26:52.000000Z\",\n            \"updated_at\": \"2026-04-17T22:26:52.000000Z\",\n            \"created_by\": \"3\",\n            \"updated_by\": null,\n            \"deleted_at\": null\n        },\n        {\n            \"id\": 22,\n            \"employer_id\": 3,\n            \"title\": \"Backend Developer\",\n            \"description\": \"Laravel job\",\n            \"status\": \"published\",\n            \"created_at\": \"2026-04-17T22:30:22.000000Z\",\n            \"updated_at\": \"2026-04-17T22:30:22.000000Z\",\n            \"created_by\": \"3\",\n            \"updated_by\": null,\n            \"deleted_at\": null\n        },\n        {\n            \"id\": 23,\n            \"employer_id\": 3,\n            \"title\": \"Backend Developer\",\n            \"description\": \"Laravel job\",\n            \"status\": \"published\",\n            \"created_at\": \"2026-04-17T22:32:15.000000Z\",\n            \"updated_at\": \"2026-04-17T22:32:15.000000Z\",\n            \"created_by\": \"3\",\n            \"updated_by\": null,\n            \"deleted_at\": null\n        },\n        {\n            \"id\": 24,\n            \"employer_id\": 3,\n            \"title\": \"Backend Developer\",\n            \"description\": \"Laravel job\",\n            \"status\": \"published\",\n            \"created_at\": \"2026-04-17T22:46:43.000000Z\",\n            \"updated_at\": \"2026-04-17T22:46:43.000000Z\",\n            \"created_by\": \"3\",\n            \"updated_by\": null,\n            \"deleted_at\": null\n        }\n    ]\n}"
+        }
+      ]
+    },
+    {
+      "name": "/api/v1/jobs",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": ""
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/jobs",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "jobs"
+          ]
+        },
+        "description": "Endpoint untuk mendapatkan daftar job dengan status \"published\"."
+      },
+      "response": [
+        {
+          "name": "Example",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/jobs",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "jobs"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "Host",
+              "value": "127.0.0.1:8000"
+            },
+            {
+              "key": "Connection",
+              "value": "close"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "PHP/8.2.12"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, private"
+            },
+            {
+              "key": "Date",
+              "value": "Fri, 17 Apr 2026 22:45:40 GMT"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"data\": [\n        {\n            \"id\": 1,\n            \"employer_id\": 1,\n            \"title\": \"Precision Pattern and Die Caster\",\n            \"description\": \"Ad aliquid quibusdam dignissimos quia voluptatem ducimus. Perferendis in voluptate eum dolores nostrum. Blanditiis laborum quo beatae asperiores optio eaque facilis voluptas. Incidunt praesentium natus enim dicta.\",\n            \"status\": \"published\",\n            \"created_at\": \"2026-04-17T19:22:42.000000Z\",\n            \"updated_at\": \"2026-04-17T19:22:42.000000Z\",\n            \"created_by\": \"SYSTEM\",\n            \"updated_by\": \"SYSTEM\",\n            \"deleted_at\": null\n        },\n        {\n            \"id\": 2,\n            \"employer_id\": 1,\n            \"title\": \"Aircraft Engine Specialist\",\n            \"description\": \"Cum nihil voluptatem nisi quia sapiente. Voluptas aut error tenetur labore voluptas porro nulla aut. Inventore sit error culpa quo et vero. Facilis perferendis tempora et aut et eos.\",\n            \"status\": \"published\",\n            \"created_at\": \"2026-04-17T19:22:42.000000Z\",\n            \"updated_at\": \"2026-04-17T19:22:42.000000Z\",\n            \"created_by\": \"SYSTEM\",\n            \"updated_by\": \"SYSTEM\",\n            \"deleted_at\": null\n        },\n        {\n            \"id\": 3,\n            \"employer_id\": 1,\n            \"title\": \"Athletes and Sports Competitor\",\n            \"description\": \"Iure nobis delectus asperiores excepturi. Nihil tempora voluptas impedit modi. Aut minus eius et ut amet consequatur magni.\",\n            \"status\": \"published\",\n            \"created_at\": \"2026-04-17T19:22:42.000000Z\",\n            \"updated_at\": \"2026-04-17T19:22:42.000000Z\",\n            \"created_by\": \"SYSTEM\",\n            \"updated_by\": \"SYSTEM\",\n            \"deleted_at\": null\n        },\n        {\n            \"id\": 4,\n            \"employer_id\": 1,\n            \"title\": \"Barber\",\n            \"description\": \"Optio ipsam ad expedita molestiae recusandae sit. Magnam beatae sint ipsam eos voluptates. Est deserunt nihil accusantium quisquam accusantium est amet. Et perferendis quas reprehenderit quidem minima.\",\n            \"status\": \"published\",\n            \"created_at\": \"2026-04-17T19:22:42.000000Z\",\n            \"updated_at\": \"2026-04-17T19:22:42.000000Z\",\n            \"created_by\": \"SYSTEM\",\n            \"updated_by\": \"SYSTEM\",\n            \"deleted_at\": null\n        },\n        {\n            \"id\": 5,\n            \"employer_id\": 1,\n            \"title\": \"Teacher Assistant\",\n            \"description\": \"Nihil ipsam quasi et quia et. Consequatur quam rerum animi ut et. Minus eligendi enim consequatur eos et nesciunt.\",\n            \"status\": \"published\",\n            \"created_at\": \"2026-04-17T19:22:42.000000Z\",\n            \"updated_at\": \"2026-04-17T19:22:42.000000Z\",\n            \"created_by\": \"SYSTEM\",\n            \"updated_by\": \"SYSTEM\",\n            \"deleted_at\": null\n        },\n        {\n            \"id\": 7,\n            \"employer_id\": 1,\n            \"title\": \"Poultry Cutter\",\n            \"description\": \"Et vel doloribus eaque mollitia. Laudantium possimus illum et quo. Nam ducimus beatae ut at aliquam. Dolor sapiente aliquam corporis magni odit quo sint.\",\n            \"status\": \"published\",\n            \"created_at\": \"2026-04-17T19:22:42.000000Z\",\n            \"updated_at\": \"2026-04-17T19:22:42.000000Z\",\n            \"created_by\": \"SYSTEM\",\n            \"updated_by\": \"SYSTEM\",\n            \"deleted_at\": null\n        },\n        {\n            \"id\": 8,\n            \"employer_id\": 1,\n            \"title\": \"Broadcast Technician\",\n            \"description\": \"Sint nihil quam eos asperiores et. Quia fuga sunt qui corporis beatae eos possimus natus. Quis animi illum placeat architecto mollitia. Pariatur recusandae consequatur sit dolore debitis consequatur.\",\n            \"status\": \"published\",\n            \"created_at\": \"2026-04-17T19:22:42.000000Z\",\n            \"updated_at\": \"2026-04-17T19:22:42.000000Z\",\n            \"created_by\": \"SYSTEM\",\n            \"updated_by\": \"SYSTEM\",\n            \"deleted_at\": null\n        },\n        {\n            \"id\": 13,\n            \"employer_id\": 1,\n            \"title\": \"Insurance Claims Clerk\",\n            \"description\": \"Sunt expedita sit vel et porro et. Velit expedita nihil voluptatibus possimus. Quas aut repudiandae nesciunt id animi. Velit eligendi id fugit et non.\",\n            \"status\": \"published\",\n            \"created_at\": \"2026-04-17T19:22:42.000000Z\",\n            \"updated_at\": \"2026-04-17T19:22:42.000000Z\",\n            \"created_by\": \"SYSTEM\",\n            \"updated_by\": \"SYSTEM\",\n            \"deleted_at\": null\n        },\n        {\n            \"id\": 14,\n            \"employer_id\": 1,\n            \"title\": \"System Administrator\",\n            \"description\": \"Et facere quasi aperiam sunt consequatur quisquam. Molestiae natus vel ut libero aut. Recusandae molestias repellat inventore temporibus laborum molestias numquam.\",\n            \"status\": \"published\",\n            \"created_at\": \"2026-04-17T19:22:42.000000Z\",\n            \"updated_at\": \"2026-04-17T19:22:42.000000Z\",\n            \"created_by\": \"SYSTEM\",\n            \"updated_by\": \"SYSTEM\",\n            \"deleted_at\": null\n        },\n        {\n            \"id\": 15,\n            \"employer_id\": 1,\n            \"title\": \"License Clerk\",\n            \"description\": \"Id ipsam cupiditate est. Nihil quia id illo repudiandae natus. Quas assumenda rerum ex quia delectus.\",\n            \"status\": \"published\",\n            \"created_at\": \"2026-04-17T19:22:42.000000Z\",\n            \"updated_at\": \"2026-04-17T19:22:42.000000Z\",\n            \"created_by\": \"SYSTEM\",\n            \"updated_by\": \"SYSTEM\",\n            \"deleted_at\": null\n        },\n        {\n            \"id\": 16,\n            \"employer_id\": 1,\n            \"title\": \"Library Science Teacher\",\n            \"description\": \"Enim rerum consequatur alias suscipit in minus ullam. Laboriosam dignissimos eum eius nemo consequatur nemo. Enim natus enim hic assumenda. Odio illo ducimus eum voluptatibus. Deserunt blanditiis quia debitis voluptas dolorem in et voluptatem.\",\n            \"status\": \"published\",\n            \"created_at\": \"2026-04-17T19:22:42.000000Z\",\n            \"updated_at\": \"2026-04-17T19:22:42.000000Z\",\n            \"created_by\": \"SYSTEM\",\n            \"updated_by\": \"SYSTEM\",\n            \"deleted_at\": null\n        },\n        {\n            \"id\": 18,\n            \"employer_id\": 1,\n            \"title\": \"Correctional Officer\",\n            \"description\": \"Sint sed voluptatem tempora velit pariatur ut. Culpa recusandae id sint sed inventore et dolores. Exercitationem iste rerum commodi animi et rerum. Dolor deserunt sit porro aut quos quod vero.\",\n            \"status\": \"published\",\n            \"created_at\": \"2026-04-17T19:22:42.000000Z\",\n            \"updated_at\": \"2026-04-17T19:22:42.000000Z\",\n            \"created_by\": \"SYSTEM\",\n            \"updated_by\": \"SYSTEM\",\n            \"deleted_at\": null\n        },\n        {\n            \"id\": 21,\n            \"employer_id\": 3,\n            \"title\": \"Backend Developer\",\n            \"description\": \"Laravel job\",\n            \"status\": \"published\",\n            \"created_at\": \"2026-04-17T22:26:52.000000Z\",\n            \"updated_at\": \"2026-04-17T22:26:52.000000Z\",\n            \"created_by\": \"3\",\n            \"updated_by\": null,\n            \"deleted_at\": null\n        },\n        {\n            \"id\": 22,\n            \"employer_id\": 3,\n            \"title\": \"Backend Developer\",\n            \"description\": \"Laravel job\",\n            \"status\": \"published\",\n            \"created_at\": \"2026-04-17T22:30:22.000000Z\",\n            \"updated_at\": \"2026-04-17T22:30:22.000000Z\",\n            \"created_by\": \"3\",\n            \"updated_by\": null,\n            \"deleted_at\": null\n        },\n        {\n            \"id\": 23,\n            \"employer_id\": 3,\n            \"title\": \"Backend Developer\",\n            \"description\": \"Laravel job\",\n            \"status\": \"published\",\n            \"created_at\": \"2026-04-17T22:32:15.000000Z\",\n            \"updated_at\": \"2026-04-17T22:32:15.000000Z\",\n            \"created_by\": \"3\",\n            \"updated_by\": null,\n            \"deleted_at\": null\n        }\n    ]\n}"
+        }
+      ]
+    },
+    {
+      "name": "/api/v1/applications",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"job_id\": 24,\r\n    \"cv_path\": \"cv/freelancer1.pdf\",\r\n    \"email\": \"freelancer@test.com\",\r\n    \"phone_number\": \"08123456789\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/applications",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "applications"
+          ]
+        },
+        "description": "Endpoint untuk mengajukan lamaran pekerjaan.\n\nHanya dapat diakses oleh Freelancer (role_id = 2).\n\nSyarat:\n\n- User hanya dapat melamar 1 kali untuk setiap job"
+      },
+      "response": [
+        {
+          "name": "Example",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"job_id\": 24,\r\n    \"cv_path\": \"cv/freelancer1.pdf\",\r\n    \"email\": \"freelancer@test.com\",\r\n    \"phone_number\": \"08123456789\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/applications",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "applications"
+              ]
+            }
+          },
+          "status": "Created",
+          "code": 201,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "Host",
+              "value": "127.0.0.1:8000"
+            },
+            {
+              "key": "Connection",
+              "value": "close"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "PHP/8.2.12"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, private"
+            },
+            {
+              "key": "Date",
+              "value": "Sat, 18 Apr 2026 08:06:20 GMT"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"message\": \"Application submitted successfully\",\n    \"data\": {\n        \"job_id\": 24,\n        \"cv_path\": \"cv/freelancer1.pdf\",\n        \"email\": \"freelancer@test.com\",\n        \"phone_number\": \"08123456789\",\n        \"freelancer_id\": 2,\n        \"status_id\": 1,\n        \"created_by\": 2,\n        \"updated_at\": \"2026-04-18T08:06:20.000000Z\",\n        \"created_at\": \"2026-04-18T08:06:20.000000Z\",\n        \"id\": 12\n    }\n}"
+        }
+      ]
+    },
+    {
+      "name": "/api/v1/applications/my",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/applications/my",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "applications",
+            "my"
+          ]
+        },
+        "description": "Endpoint untuk melihat daftar lamaran pekerjaan milik user (Freelancer).\n\nMenampilkan semua job yang telah dilamar oleh user."
+      },
+      "response": [
+        {
+          "name": "Example",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/applications/my",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "applications",
+                "my"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "Host",
+              "value": "127.0.0.1:8000"
+            },
+            {
+              "key": "Connection",
+              "value": "close"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "PHP/8.2.12"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, private"
+            },
+            {
+              "key": "Date",
+              "value": "Sat, 18 Apr 2026 09:57:32 GMT"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"data\": [\n        {\n            \"id\": 1,\n            \"job_id\": 1,\n            \"freelancer_id\": 2,\n            \"cv_path\": \"cv/c8d80722-2706-30b3-9ad7-64b84a3b5c04.pdf\",\n            \"email\": \"freelancer@mail.com\",\n            \"phone_number\": \"731.348.3132\",\n            \"status_id\": 2,\n            \"created_at\": \"2026-04-17T19:22:42.000000Z\",\n            \"updated_at\": \"2026-04-18T09:40:24.000000Z\",\n            \"created_by\": \"SYSTEM\",\n            \"updated_by\": \"3\",\n            \"deleted_at\": null\n        },\n        {\n            \"id\": 2,\n            \"job_id\": 3,\n            \"freelancer_id\": 2,\n            \"cv_path\": \"cv/7fea9151-5df3-3d0d-a14c-7a4a25c1ea1f.pdf\",\n            \"email\": \"freelancer@mail.com\",\n            \"phone_number\": \"731.348.3132\",\n            \"status_id\": 2,\n            \"created_at\": \"2026-04-17T19:22:42.000000Z\",\n            \"updated_at\": \"2026-04-17T19:22:42.000000Z\",\n            \"created_by\": \"SYSTEM\",\n            \"updated_by\": \"SYSTEM\",\n            \"deleted_at\": null\n        },\n        {\n            \"id\": 3,\n            \"job_id\": 14,\n            \"freelancer_id\": 2,\n            \"cv_path\": \"cv/d170f3d9-47a7-3ffc-bf1b-7aedb8221e71.pdf\",\n            \"email\": \"freelancer@mail.com\",\n            \"phone_number\": \"731.348.3132\",\n            \"status_id\": 3,\n            \"created_at\": \"2026-04-17T19:22:42.000000Z\",\n            \"updated_at\": \"2026-04-17T19:22:42.000000Z\",\n            \"created_by\": \"SYSTEM\",\n            \"updated_by\": \"SYSTEM\",\n            \"deleted_at\": null\n        },\n        {\n            \"id\": 4,\n            \"job_id\": 2,\n            \"freelancer_id\": 2,\n            \"cv_path\": \"cv/22625a0f-09cf-30a1-8c37-ce6ea082d421.pdf\",\n            \"email\": \"freelancer@mail.com\",\n            \"phone_number\": \"731.348.3132\",\n            \"status_id\": 4,\n            \"created_at\": \"2026-04-17T19:22:42.000000Z\",\n            \"updated_at\": \"2026-04-17T19:22:42.000000Z\",\n            \"created_by\": \"SYSTEM\",\n            \"updated_by\": \"SYSTEM\",\n            \"deleted_at\": null\n        },\n        {\n            \"id\": 5,\n            \"job_id\": 15,\n            \"freelancer_id\": 2,\n            \"cv_path\": \"cv/d010c42f-b6d2-3afe-ade8-1475978e3130.pdf\",\n            \"email\": \"freelancer@mail.com\",\n            \"phone_number\": \"731.348.3132\",\n            \"status_id\": 2,\n            \"created_at\": \"2026-04-17T19:22:42.000000Z\",\n            \"updated_at\": \"2026-04-17T19:22:42.000000Z\",\n            \"created_by\": \"SYSTEM\",\n            \"updated_by\": \"SYSTEM\",\n            \"deleted_at\": null\n        },\n        {\n            \"id\": 6,\n            \"job_id\": 16,\n            \"freelancer_id\": 2,\n            \"cv_path\": \"cv/a3610bf1-9f7e-343a-b68e-83a472c0733c.pdf\",\n            \"email\": \"freelancer@mail.com\",\n            \"phone_number\": \"731.348.3132\",\n            \"status_id\": 1,\n            \"created_at\": \"2026-04-17T19:22:42.000000Z\",\n            \"updated_at\": \"2026-04-17T19:22:42.000000Z\",\n            \"created_by\": \"SYSTEM\",\n            \"updated_by\": \"SYSTEM\",\n            \"deleted_at\": null\n        },\n        {\n            \"id\": 7,\n            \"job_id\": 8,\n            \"freelancer_id\": 2,\n            \"cv_path\": \"cv/2a4aca5e-125e-3f8d-b43f-c44e5ae7abd1.pdf\",\n            \"email\": \"freelancer@mail.com\",\n            \"phone_number\": \"731.348.3132\",\n            \"status_id\": 4,\n            \"created_at\": \"2026-04-17T19:22:42.000000Z\",\n            \"updated_at\": \"2026-04-17T19:22:42.000000Z\",\n            \"created_by\": \"SYSTEM\",\n            \"updated_by\": \"SYSTEM\",\n            \"deleted_at\": null\n        },\n        {\n            \"id\": 8,\n            \"job_id\": 5,\n            \"freelancer_id\": 2,\n            \"cv_path\": \"cv/94c3316e-4e0d-3616-adcd-f3b80886b9c9.pdf\",\n            \"email\": \"freelancer@mail.com\",\n            \"phone_number\": \"731.348.3132\",\n            \"status_id\": 3,\n            \"created_at\": \"2026-04-17T19:22:42.000000Z\",\n            \"updated_at\": \"2026-04-17T19:22:42.000000Z\",\n            \"created_by\": \"SYSTEM\",\n            \"updated_by\": \"SYSTEM\",\n            \"deleted_at\": null\n        },\n        {\n            \"id\": 9,\n            \"job_id\": 13,\n            \"freelancer_id\": 2,\n            \"cv_path\": \"cv/20885ad5-311b-3599-bbcf-84a0651f27b4.pdf\",\n            \"email\": \"freelancer@mail.com\",\n            \"phone_number\": \"731.348.3132\",\n            \"status_id\": 1,\n            \"created_at\": \"2026-04-17T19:22:42.000000Z\",\n            \"updated_at\": \"2026-04-17T19:22:42.000000Z\",\n            \"created_by\": \"SYSTEM\",\n            \"updated_by\": \"SYSTEM\",\n            \"deleted_at\": null\n        },\n        {\n            \"id\": 10,\n            \"job_id\": 18,\n            \"freelancer_id\": 2,\n            \"cv_path\": \"cv/6411855a-74ca-39d6-a18e-7eb8a322793b.pdf\",\n            \"email\": \"freelancer@mail.com\",\n            \"phone_number\": \"731.348.3132\",\n            \"status_id\": 1,\n            \"created_at\": \"2026-04-17T19:22:42.000000Z\",\n            \"updated_at\": \"2026-04-17T19:22:42.000000Z\",\n            \"created_by\": \"SYSTEM\",\n            \"updated_by\": \"SYSTEM\",\n            \"deleted_at\": null\n        },\n        {\n            \"id\": 11,\n            \"job_id\": 4,\n            \"freelancer_id\": 2,\n            \"cv_path\": \"cv/c7f23c21-5d5e-3a81-942e-69158f77a2e7.pdf\",\n            \"email\": \"freelancer@mail.com\",\n            \"phone_number\": \"731.348.3132\",\n            \"status_id\": 4,\n            \"created_at\": \"2026-04-17T19:22:42.000000Z\",\n            \"updated_at\": \"2026-04-17T19:22:42.000000Z\",\n            \"created_by\": \"SYSTEM\",\n            \"updated_by\": \"SYSTEM\",\n            \"deleted_at\": null\n        },\n        {\n            \"id\": 12,\n            \"job_id\": 24,\n            \"freelancer_id\": 2,\n            \"cv_path\": \"cv/freelancer1.pdf\",\n            \"email\": \"freelancer@test.com\",\n            \"phone_number\": \"08123456789\",\n            \"status_id\": 1,\n            \"created_at\": \"2026-04-18T08:06:20.000000Z\",\n            \"updated_at\": \"2026-04-18T08:06:20.000000Z\",\n            \"created_by\": \"2\",\n            \"updated_by\": null,\n            \"deleted_at\": null\n        }\n    ]\n}"
+        }
+      ]
+    },
+    {
+      "name": "/api/v1/applications/job/{id}",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{Token}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{}",
+          "options": {
+            "raw": {
+              "headerFamily": "json",
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/applications/job/24",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "applications",
+            "job",
+            "24"
+          ]
+        },
+        "description": "Endpoint untuk melihat daftar pelamar pada suatu job. Hanya dapat diakses oleh Employer dan digunakan untuk melihat freelancer yang melamar pada job tertentu."
+      },
+      "response": [
+        {
+          "name": "Example",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{Token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "headerFamily": "json",
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/applications/job/24",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "applications",
+                "job",
+                "24"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "Host",
+              "value": "127.0.0.1:8000"
+            },
+            {
+              "key": "Connection",
+              "value": "close"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "PHP/8.2.12"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, private"
+            },
+            {
+              "key": "Date",
+              "value": "Sat, 18 Apr 2026 10:44:23 GMT"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"data\": [\n        {\n            \"id\": 12,\n            \"job_id\": 24,\n            \"freelancer_id\": 2,\n            \"cv_path\": \"cv/freelancer1.pdf\",\n            \"email\": \"freelancer@test.com\",\n            \"phone_number\": \"08123456789\",\n            \"status_id\": 1,\n            \"created_at\": \"2026-04-18T08:06:20.000000Z\",\n            \"updated_at\": \"2026-04-18T08:06:20.000000Z\",\n            \"created_by\": \"2\",\n            \"updated_by\": null,\n            \"deleted_at\": null\n        }\n    ]\n}"
+        }
+      ]
+    },
+    {
+      "name": "/api/v1/applications/{id}/status",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{Token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status_id\": 2\n}",
+          "options": {
+            "raw": {
+              "headerFamily": "json",
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/applications/1/status",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "applications",
+            "1",
+            "status"
+          ]
+        },
+        "description": "Endpoint untuk mengupdate status lamaran pekerjaan.\n\nHanya dapat diakses oleh Employer.\n\nField:\n\n- status_id\n    \n\nStatus yang tersedia:  \n1 = applied  \n2 = reviewed  \n3 = accepted  \n4 = rejected"
+      },
+      "response": [
+        {
+          "name": "Example",
+          "originalRequest": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{Token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status_id\": 2\n}",
+              "options": {
+                "raw": {
+                  "headerFamily": "json",
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/applications/1/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "applications",
+                "1",
+                "status"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "Host",
+              "value": "127.0.0.1:8000"
+            },
+            {
+              "key": "Connection",
+              "value": "close"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "PHP/8.2.12"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, private"
+            },
+            {
+              "key": "Date",
+              "value": "Sat, 18 Apr 2026 10:46:29 GMT"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"message\": \"Status updated successfully\",\n    \"data\": {\n        \"id\": 1,\n        \"job_id\": 1,\n        \"freelancer_id\": 2,\n        \"cv_path\": \"cv/c8d80722-2706-30b3-9ad7-64b84a3b5c04.pdf\",\n        \"email\": \"freelancer@mail.com\",\n        \"phone_number\": \"731.348.3132\",\n        \"status_id\": 2,\n        \"created_at\": \"2026-04-17T19:22:42.000000Z\",\n        \"updated_at\": \"2026-04-18T10:46:29.000000Z\",\n        \"created_by\": \"SYSTEM\",\n        \"updated_by\": 5,\n        \"deleted_at\": null\n    }\n}"
+        }
+      ]
+    },
+    {
+      "name": "/api/v1/me",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{Token}}"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/me",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "me"
+          ]
+        },
+        "description": "Endpoint untuk mendapatkan data profil user yang sedang login.\n\nMembutuhkan header Authorization Bearer Token."
+      },
+      "response": [
+        {
+          "name": "Example",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{Token}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "me"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "Host",
+              "value": "127.0.0.1:8000"
+            },
+            {
+              "key": "Connection",
+              "value": "close"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "PHP/8.2.12"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, private"
+            },
+            {
+              "key": "Date",
+              "value": "Sat, 18 Apr 2026 10:00:00 GMT"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"data\": {\n        \"id\": 3,\n        \"name\": \"Employer Test\",\n        \"email\": \"employer@test.com\",\n        \"phone_number\": null,\n        \"role_id\": 1,\n        \"profile_photo\": null,\n        \"profile_description\": null,\n        \"created_at\": \"2026-04-17T21:43:02.000000Z\",\n        \"updated_at\": \"2026-04-17T21:43:02.000000Z\",\n        \"created_by\": null,\n        \"updated_by\": null\n    }\n}"
+        }
+      ]
+    },
+    {
+      "name": "/api/v1/jobs/{id}",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{Token}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"title\": \"Senior Backend Engineer\",\n    \"description\": \"Build scalable APIs using Laravel\",\n    \"status\": \"published\"\n}",
+          "options": {
+            "raw": {
+              "headerFamily": "json",
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/jobs/5",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "jobs",
+            "5"
+          ]
+        },
+        "description": "Endpoint untuk mengupdate data job berdasarkan ID.\n\nHanya dapat diakses oleh Employer.  \nUser hanya dapat mengupdate job miliknya sendiri.\n\nField yang dapat diubah:\n\n- title\n    \n- description\n    \n- status"
+      },
+      "response": [
+        {
+          "name": "Example",
+          "originalRequest": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{Token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Senior Backend Engineer\",\n    \"description\": \"Build scalable APIs using Laravel\",\n    \"status\": \"published\"\n}",
+              "options": {
+                "raw": {
+                  "headerFamily": "json",
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/jobs/5",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "jobs",
+                "5"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "Host",
+              "value": "127.0.0.1:8000"
+            },
+            {
+              "key": "Connection",
+              "value": "close"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "PHP/8.2.12"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, private"
+            },
+            {
+              "key": "Date",
+              "value": "Sat, 18 Apr 2026 10:50:45 GMT"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"message\": \"Job updated successfully\",\n    \"data\": {\n        \"id\": 5,\n        \"employer_id\": 1,\n        \"title\": \"Senior Backend Engineer\",\n        \"description\": \"Build scalable APIs using Laravel\",\n        \"status\": \"published\",\n        \"created_at\": \"2026-04-17T19:22:42.000000Z\",\n        \"updated_at\": \"2026-04-18T10:50:45.000000Z\",\n        \"created_by\": \"SYSTEM\",\n        \"updated_by\": 5,\n        \"deleted_at\": null\n    }\n}"
+        }
+      ]
+    },
+    {
+      "name": "/api/v1/jobs/{id}",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{Token}}"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": ""
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/jobs/6",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "jobs",
+            "6"
+          ]
+        },
+        "description": "Endpoint untuk menghapus job berdasarkan ID.\n\nHanya dapat diakses oleh Employer.  \nJob yang dihapus tidak akan muncul lagi dalam daftar job."
+      },
+      "response": [
+        {
+          "name": "Example",
+          "originalRequest": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{Token}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/jobs/6",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "jobs",
+                "6"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "Host",
+              "value": "127.0.0.1:8000"
+            },
+            {
+              "key": "Connection",
+              "value": "close"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "PHP/8.2.12"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, private"
+            },
+            {
+              "key": "Date",
+              "value": "Sat, 18 Apr 2026 10:03:41 GMT"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"message\": \"Job deleted successfully\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "/api/v1/logout",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{Token}}"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/logout",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "logout"
+          ]
+        },
+        "description": "Endpoint untuk logout user dan menghapus token yang sedang digunakan.\n\nSetelah logout, token tidak dapat digunakan kembali untuk mengakses API."
+      },
+      "response": [
+        {
+          "name": "Example",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{Token}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/logout",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "logout"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "Host",
+              "value": "127.0.0.1:8000"
+            },
+            {
+              "key": "Connection",
+              "value": "close"
+            },
+            {
+              "key": "X-Powered-By",
+              "value": "PHP/8.2.12"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, private"
+            },
+            {
+              "key": "Date",
+              "value": "Sat, 18 Apr 2026 10:05:30 GMT"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"message\": \"Logged out successfully\"\n}"
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "Token",
+      "value": "",
+      "type": "any"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "any"
+    },
+    {
+      "key": "baseUrl",
+      "value": "http://127.0.0.1:8000",
+      "type": "any"
+    }
+  ]
+}

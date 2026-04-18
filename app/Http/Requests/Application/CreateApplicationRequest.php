@@ -14,7 +14,7 @@ class CreateApplicationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'job_id' => 'required|exists:jobs,id',
+            'job_id' => 'required|exists:jobs_mx100,id',
             'cv_path' => 'required|string',
             'email' => 'required|email',
             'phone_number' => 'nullable|string',
